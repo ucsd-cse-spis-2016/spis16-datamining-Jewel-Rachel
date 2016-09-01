@@ -4,11 +4,12 @@ from collections import defaultdict, Counter
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
 import wordcloudgen as wordcloud
+import make_plots as plot
 
-# Video Game Review Data: http://cses.ucsd.edu/spis/reviews_Video_Games_5.json
-# Movie Review Data: http://cses.ucsd.edu/spis/reviews_Movies_and_TV_5.json
-# CD Review Data: http://cses.ucsd.edu/spis/reviews_CDs_and_Vinyl_5.json
-# Car Review Data: http://cses.ucsd.edu/spis/reviews_Automotive_5.json
+# Video Game Review Data: http://cses.ucsd.edu/spis/reviews_Video_Games_5.json (231,780 reviews)
+# Movie Review Data: http://cses.ucsd.edu/spis/reviews_Movies_and_TV_5.json (1,697,533 reviews)
+# CD Review Data: http://cses.ucsd.edu/spis/reviews_CDs_and_Vinyl_5.json (1,097,592 reviews)
+# Car Review Data: http://cses.ucsd.edu/spis/reviews_Automotive_5.json (20,473 reviews)
 
 
 if __name__ == "__main__":
@@ -36,6 +37,7 @@ if __name__ == "__main__":
     # creates a wordcloud
     ## makeWordcloud(w[0][:50]) -- makes wordcloud of 50 most positive words
     ## makeWordcloud(w[0][-50:]) -- makes wordcloud of 50 most negative words
+
 
 # Wordcloud Functions
 
@@ -192,6 +194,23 @@ def helpfulPrep(data):
     newdata = discardEmpty(data)
     newdata = discardSmall(data)
     return newdata
+
+def plotly_plots(data):
+    data = helpfulPrep(data)
+    helpIndex = getHelpfulIndex(data)
+    X = [[1,h['1 rating']] for h in helpIndex]
+    
+    y1 = [[1,h['2 average votes']] for h in helpIndex]
+    title = 'Product rating vs. average helpfulness votes per review'
+    xtitle = 'Product rating'
+    ytitle = 'Average helpfulness votes'
+    line(X,y1,title,xtitle,ytitle)
+
+    y2 = [[1,h['3 percent helpful']] for h in helpIndex]
+    title2 = 'Product rating vs. percent rated helpful'
+    xtitle2 = 'Product rating'
+    ytitle2 = 'Percent rated helpful'
+    line(X,y2,title2,xtitle2,ytitle2)
 
 def helpfulGraphs(data):
     ''' Creates graphs based on the rating and the helpfulness of each review'''

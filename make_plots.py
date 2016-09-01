@@ -1,23 +1,28 @@
 import plotly.plotly as py
 import plotly.graph_objs as go
 
-fig = {
-    'data': [{'labels': ['Residential', 'Non-Residential', 'Utility'],
-              'values': [19, 26, 55],
-              'type': 'pie'}],
-    'layout': {'title': 'Forcasted 2014 U.S. PV Installations by Market Segment'}
-     }
+def pie_chart(labels, values, title):
+    fig = {
+        'data': [{'labels': labels,
+                  'values': values,
+                  'type': 'pie'}],
+        'layout': {'title': title}
+         }
+    py.plot(fig)
+    print 'pie complete'
 
-py.plot(fig)
-print 'done'
-
-def scatter()
-
-fig2 = go.Scatter(
-    x = random_x,
-    y = random_y2,
-    mode = 'lines+markers',
-    name = 'markers'
-)
-
-py.plot(fig2)
+def line(xlist,ylist,title,xaxis,yaxis)
+    '''xlist, ylist, title, xaxis, yaxis'''
+    plot = go.Scatter(
+        x = xlist,
+        y = ylist,
+        mode = 'lines+markers',
+        name = title
+    )
+    layout = dict(title = title,
+              xaxis = dict(title = xaxis),
+              yaxis = dict(title = yaxis),
+              )
+    fit = dict(data=plot, layout=layout)
+    py.plot(fig)
+    print 'line complete'
