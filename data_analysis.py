@@ -3,7 +3,7 @@ import string, pprint, numpy
 from collections import defaultdict, Counter
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
-import wordCloudGen as wordcloud
+import wordcloudgen as wordcloud
 
 # Video Game Review Data: http://cses.ucsd.edu/spis/reviews_Video_Games_5.json
 # Movie Review Data: http://cses.ucsd.edu/spis/reviews_Movies_and_TV_5.json
