@@ -13,7 +13,7 @@ import wordcloudgen as wordcloud
 
 if __name__ == "__main__":
     # pulls data from the web
-    data = smallData("http://cses.ucsd.edu/spis/reviews_Movies_and_TV_5.json",10000)
+    data = smallData("http://cses.ucsd.edu/spis/reviews_Movies_and_TV_5.json",75000)
 
     # gets word sentiment list
     ## w = get_word_weights(data)
@@ -60,9 +60,13 @@ def makeWordcloud(listOfWeightsAndWords):
     t = wordcloud.TagCloud()
     print t.draw(listOfDicts)
 
-# extra function
+def makeWordcloud_freq(listOfWords):
+    listOfDicts = toWordcloudForm_freq(listOfWords)
+    t = wordcloud.TagCloud()
+    print t.draw(listOfDicts)
 
-def toWordcloudFormFreq(dictOfWords):
+def toWordcloudForm_freq(listOfWords):
+    dictOfWords = word_IDs(listOfWords)
     listOfDicts = []
     for p in listOfWords.keys():
         listOfDicts.append({"text": p, "weight": dictOfWords[p]})
@@ -114,21 +118,22 @@ def feature(reviewText, data, topWords, wordId):
     return feat
 
 def get_word_weights(data):
+    print 'Working...'
     stops = stopwords.words('english')
     topWords = top_words(data, stops)
-    print 'top_words completed'
+    print '  top_words completed'
     wordId = word_IDs(topWords)
     feat = [feature(d['reviewText'], data, topWords, wordId) for d in data]
     X = [f for f in feat]
-    print 'X completed'
+    print '  X completed'
     y = [d['overall'] for d in data]
-    print 'y completed'
+    print '  y completed'
     theta = numpy.linalg.lstsq(X,y)[0] # theta = (m,b)
-    print 'theta completed'
+    print '  theta completed'
     wordweights = [[theta[i],topWords[i]] for i in range(1000)]
-    print 'wordweights completed'
     wordweights.sort()
     wordweights.reverse()
+    print 'done'
     return (wordweights, theta, topWords, feat)
 
 # Predictor Functions
