@@ -14,13 +14,14 @@ import make_plots as plot
 
 if __name__ == "__main__":
     # pulls data from the web
-    data = smallData("http://cses.ucsd.edu/spis/reviews_Movies_and_TV_5.json",75000)
+    the_data = smallData("http://cses.ucsd.edu/spis/reviews_Movies_and_TV_5.json",700)
 
     # gets word sentiment list
-    ## w = get_word_weights(data)
+    ## w = get_word_weights(the_data)
 
     # makes graphs
-    ## helpfulGraphs(data)
+    ## plotly_plots(the_data)
+    ## helpfulGraphs(the_data)
     ## wordCountGraphs(data, w[3], w[1])
 
     # makes predictions
@@ -32,7 +33,7 @@ if __name__ == "__main__":
     ## wordSentiment[-10:] -- shows top 10 most negative words
 
     # returns the number of times each word has appeared
-    ## allWords = word_count_dict(data) -- ex: allWords['awesome']
+    ## allWords = word_count_dict(the_data) -- ex: allWords['awesome']
 
     # creates a wordcloud
     ## makeWordcloud(w[0][:50]) -- makes wordcloud of 50 most positive words
@@ -195,22 +196,38 @@ def helpfulPrep(data):
     newdata = discardSmall(data)
     return newdata
 
-def plotly_plots(data):
-    data = helpfulPrep(data)
-    helpIndex = getHelpfulIndex(data)
+def plotly_plots(the_data):
+    the_data = helpfulPrep(the_data)
+    helpIndex = getHelpfulIndex(the_data)
     X = [[1,h['1 rating']] for h in helpIndex]
-    
+
+    # rating vs votes per review
     y1 = [[1,h['2 average votes']] for h in helpIndex]
     title = 'Product rating vs. average helpfulness votes per review'
     xtitle = 'Product rating'
     ytitle = 'Average helpfulness votes'
-    line(X,y1,title,xtitle,ytitle)
+    filename = 'rating-vs-votes-line'
+    plot.line(X,y1,title,xtitle,ytitle,filename)
 
+    # rating vs percent helpful
     y2 = [[1,h['3 percent helpful']] for h in helpIndex]
     title2 = 'Product rating vs. percent rated helpful'
     xtitle2 = 'Product rating'
     ytitle2 = 'Percent rated helpful'
-    line(X,y2,title2,xtitle2,ytitle2)
+    filename = 'rating-vs-percent-line'
+    plot.line(X,y2,title2,xtitle2,ytitle2,filename)
+
+    # wordcount vs percent helpful (vs num votes)
+    words = getWordCounts(the_data)
+    x = [w[0] for w in words]
+    y = [float(r['helpful'][0])/r['helpful'][1] for r in the_data]
+    color = [r['helpful'][1] for r in the_data]
+    title3 = 'Wordcount vs. percent voted helpful vs. number of voters'
+    xaxis = 'Review wordcount'
+    yaxis = 'Percent voted helpful'
+    caxis = 'Number of votes'
+    filename = 'helpful-color-scatter-plot'
+    plot.color_scatter(x,y,color,title3,xaxis,yaxis,caxis,filename)
 
 def helpfulGraphs(data):
     ''' Creates graphs based on the rating and the helpfulness of each review'''
