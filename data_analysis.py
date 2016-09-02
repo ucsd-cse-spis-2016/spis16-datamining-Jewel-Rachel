@@ -123,17 +123,17 @@ def feature(reviewText, data, topWords, wordId):
 def get_word_weights(data):
     print 'Working...'
     stops = stopwords.words('english')
-    topWords = top_words(data, stops)
+    topWords = top_words(data, stops) # creates a list of the top 1000 words
     print '  top_words completed'
     wordId = word_IDs(topWords)
-    feat = [feature(d['reviewText'], data, topWords, wordId) for d in data]
+    feat = [feature(d['reviewText'], data, topWords, wordId) for d in data] # creates a vector for each review
     X = [f for f in feat]
     print '  X completed'
     y = [d['overall'] for d in data]
     print '  y completed'
     theta = numpy.linalg.lstsq(X,y)[0] # theta = (m,b)
     print '  theta completed'
-    wordweights = [[theta[i],topWords[i]] for i in range(1000)]
+    wordweights = [[theta[i],topWords[i]] for i in range(1000)] # creates a tuple of each theta and word
     wordweights.sort()
     wordweights.reverse()
     print 'done'
