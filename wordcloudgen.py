@@ -16,7 +16,7 @@ class TagCloud(object):
 		self.width = width
 		self.height = height
 		self.words_to_draw = None
-		self.image = Image.new('RGBA', [width, height], "#fff")
+		self.image = Image.new('RGBA', [width, height], "#000")
 		self.imageDraw = ImageDraw.Draw(self.image)
 		
 	def formatWordList(self, words, values):
