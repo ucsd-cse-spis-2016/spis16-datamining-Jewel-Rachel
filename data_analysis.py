@@ -1,5 +1,5 @@
 from data import smallData
-import string, pprint, numpy
+import string, pprint, numpy, math
 from collections import defaultdict, Counter
 from nltk.corpus import stopwords
 import matplotlib.pyplot as plt
@@ -14,7 +14,7 @@ import make_plots as plot
 
 if __name__ == "__main__":
     # pulls data from the web
-    the_data = smallData("http://cses.ucsd.edu/spis/reviews_Movies_and_TV_5.json",700)
+    the_data = smallData("http://cses.ucsd.edu/spis/reviews_Video_Games_5.json",2000)
 
     # gets word sentiment list
     ## w = get_word_weights(the_data)
@@ -164,7 +164,7 @@ def discardEmpty(data):
 def discardSmall(data):
     useful = []
     for d in data:
-        if d['helpful'][1] > 3:
+        if d['helpful'][1] > 5 and not (d['helpful'][1] - d['helpful'][0] == 0 and d['overall']==4):
             useful.append(d)
     return useful
 
@@ -199,10 +199,10 @@ def helpfulPrep(data):
 def plotly_plots(the_data):
     the_data = helpfulPrep(the_data)
     helpIndex = getHelpfulIndex(the_data)
-    X = [[1,h['1 rating']] for h in helpIndex]
+    X = [h['1 rating'] for h in helpIndex]
 
     # rating vs votes per review
-    y1 = [[1,h['2 average votes']] for h in helpIndex]
+    y1 = [h['2 average votes'] for h in helpIndex]
     title = 'Product rating vs. average helpfulness votes per review'
     xtitle = 'Product rating'
     ytitle = 'Average helpfulness votes'
@@ -210,7 +210,7 @@ def plotly_plots(the_data):
     plot.line(X,y1,title,xtitle,ytitle,filename)
 
     # rating vs percent helpful
-    y2 = [[1,h['3 percent helpful']] for h in helpIndex]
+    y2 = [h['3 percent helpful'] for h in helpIndex]
     title2 = 'Product rating vs. percent rated helpful'
     xtitle2 = 'Product rating'
     ytitle2 = 'Percent rated helpful'
@@ -221,7 +221,7 @@ def plotly_plots(the_data):
     words = getWordCounts(the_data)
     x = [w[0] for w in words]
     y = [float(r['helpful'][0])/r['helpful'][1] for r in the_data]
-    color = [r['helpful'][1] for r in the_data]
+    color = [math.log(r['helpful'][1]) for r in the_data]
     title3 = 'Wordcount vs. percent voted helpful vs. number of voters'
     xaxis = 'Review wordcount'
     yaxis = 'Percent voted helpful'
@@ -250,7 +250,7 @@ def helpfulGraphs(data):
     axes = plt.gca()
     axes.set_xlim([1,5])
     axes.set_ylim([0,100])
-    y2 = [[1,h['3 percent helpful']] for h in helpIndex]
+    y2 = [[h['3 percent helpful']] for h in helpIndex]
     plt.title('Review rating vs percent rated helpful')
     plt.ylabel('Percent rated helpful')
     plt.xlabel('Rating')

@@ -25,7 +25,7 @@ def line(xlist,ylist,title,xaxis,yaxis,filename):
               )
     data = [trace]
     fig = dict(data=data, layout = layout)
-    py.plot(fig)
+    py.plot(fig, filename = filename)
     print 'line plot complete'
 
 def color_scatter(xlist, ylist, clist, title, xaxis, yaxis, caxis, filename):
@@ -37,7 +37,8 @@ def color_scatter(xlist, ylist, clist, title, xaxis, yaxis, caxis, filename):
         marker=dict(
             size='8',
             color = clist, #set color equal to a variable
-            colorscale='Viridis',
+            colorscale='Jet',
+            reversescale=False,
             showscale=True,
             colorbar= dict(title = caxis)
         )
