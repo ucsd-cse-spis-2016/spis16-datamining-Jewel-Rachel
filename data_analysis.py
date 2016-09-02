@@ -14,7 +14,7 @@ import make_plots as plot
 
 if __name__ == "__main__":
     # pulls data from the web
-    the_data = smallData("http://cses.ucsd.edu/spis/reviews_Movies_and_TV_5.json",100000)
+    the_data = smallData("http://cses.ucsd.edu/spis/reviews_CDs_and_Vinyl_5.json",1000)
 
     # gets word sentiment list
     ## w = get_word_weights(the_data)
@@ -22,7 +22,6 @@ if __name__ == "__main__":
     # makes graphs
     ## plotly_plots(the_data)
     ## helpfulGraphs(the_data)
-    ## wordCountGraphs(data, w[3], w[1])
 
     # makes predictions
     ## p = predicted(w[1], w[3]) 
@@ -32,13 +31,12 @@ if __name__ == "__main__":
     ## wordSentiment[:10] -- shows top 10 most positive words
     ## wordSentiment[-10:] -- shows top 10 most negative words
 
-    # returns the number of times each word has appeared
-    ## allWords = word_count_dict(the_data) -- ex: allWords['awesome']
-
     # creates a wordcloud
     ## makeWordcloud(w[0][:50]) -- makes wordcloud of 50 most positive words
     ## makeWordcloud(w[0][-50:]) -- makes wordcloud of 50 most negative words
 
+    # returns the number of times each word has appeared
+    ## allWords = word_count_dict(the_data) -- ex: allWords['awesome']
 
 # Wordcloud Functions
 
@@ -123,17 +121,17 @@ def feature(reviewText, data, topWords, wordId):
 def get_word_weights(data):
     print 'Working...'
     stops = stopwords.words('english')
-    topWords = top_words(data, stops) # creates a list of the top 1000 words
+    topWords = top_words(data, stops)
     print '  top_words completed'
     wordId = word_IDs(topWords)
-    feat = [feature(d['reviewText'], data, topWords, wordId) for d in data] # creates a vector for each review
+    feat = [feature(d['reviewText'], data, topWords, wordId) for d in data]
     X = [f for f in feat]
     print '  X completed'
     y = [d['overall'] for d in data]
     print '  y completed'
     theta = numpy.linalg.lstsq(X,y)[0] # theta = (m,b)
     print '  theta completed'
-    wordweights = [[theta[i],topWords[i]] for i in range(1000)] # creates a tuple of each theta and word
+    wordweights = [[theta[i],topWords[i]] for i in range(1000)]
     wordweights.sort()
     wordweights.reverse()
     print 'done'
@@ -164,7 +162,7 @@ def discardEmpty(data):
 def discardSmall(data):
     useful = []
     for d in data:
-        if d['helpful'][1] > 5 and not (d['helpful'][1] - d['helpful'][0] == 0):
+        if d['helpful'][1] > 5 and not (d['helpful'][1] - d['helpful'][0] == 0 and d['overall']==4):
             useful.append(d)
     return useful
 
