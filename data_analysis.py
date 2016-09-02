@@ -14,7 +14,7 @@ import make_plots as plot
 
 if __name__ == "__main__":
     # pulls data from the web
-    the_data = smallData("http://cses.ucsd.edu/spis/reviews_Video_Games_5.json",2000)
+    the_data = smallData("http://cses.ucsd.edu/spis/reviews_Movies_and_TV_5.json",100000)
 
     # gets word sentiment list
     ## w = get_word_weights(the_data)
@@ -164,7 +164,7 @@ def discardEmpty(data):
 def discardSmall(data):
     useful = []
     for d in data:
-        if d['helpful'][1] > 5 and not (d['helpful'][1] - d['helpful'][0] == 0 and d['overall']==4):
+        if d['helpful'][1] > 5 and not (d['helpful'][1] - d['helpful'][0] == 0):
             useful.append(d)
     return useful
 
